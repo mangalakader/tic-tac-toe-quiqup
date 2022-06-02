@@ -12,6 +12,8 @@ defmodule TicTacToeQuiqup.Application do
       TicTacToeQuiqupWeb.Telemetry,
       # Start the PubSub system
       {Phoenix.PubSub, name: TicTacToeQuiqup.PubSub},
+      {Registry, name: TicTacToeQuiqup.Registry, keys: :unique},
+      {TicTacToeQuiqup.GameSupervisor, []},
       # Start the Endpoint (http/https)
       TicTacToeQuiqupWeb.Endpoint
       # Start a worker by calling: TicTacToeQuiqup.Worker.start_link(arg)

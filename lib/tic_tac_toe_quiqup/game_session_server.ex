@@ -3,28 +3,31 @@ defmodule TicTacToeQuiqup.GameSessionServer do
   A GenServer to manage different Game Sessions in the Server
   """
 
-  alias TicTacToeQuiqup.{GamePlayer, GameSessionServer, GameSquare}
+  @registry TicTacToeQuiqup.Registry
+
+  alias TicTacToeQuiqup.{GamePlayer, GameSessionState, GameSquare}
 
   use GenServer
 
-  defstruct name: nil,
-            player_one: nil,
-            player_two: nil,
-            board: nil,
-            next_turn: nil,
-            status: :not_started,
-            winner: nil
-
   @doc false
-  def start_link, do: GenServer.start_link(__MODULE__, Map.new())
+  def start_link([session_code: session_code, player: _player] = args) do
+    case GenServer.start_link(
+           __MODULE__,
+           args,
+           name: via_tuple(session_code)
+         ) do
+      {:ok, pid} -> {:ok, pid}
+      {:error, {:already_started, pid}} -> {:ok, pid}
+    end
+  end
 
   @impl true
-  def init(state), do: {:ok, state}
+  def init(session_code: session_code, player: player),
+    do: GameSessionState.event({:new_game, session_code, player})
 
   def play(game_session_state, row, col, player) do
     with {:ok, _player_letter} <- GamePlayer.validate_player(player),
          {:ok, square} <- GameSquare.new(row, col),
-         {:ok, :success} <- check_player_turn(game_session_state, player),
          {:ok, state} <- update_game_session(game_session_state, square, player),
          :continue <- winner(state.board, player.letter) do
       {:ok, state}
@@ -48,13 +51,6 @@ defmodule TicTacToeQuiqup.GameSessionServer do
         {:error, :occupied}
     end
   end
-
-  defp check_player_turn(%GameSessionServer{next_turn: l1}, %GamePlayer{letter: l2})
-       when l1 == l2,
-       do: {:ok, :success}
-
-  defp check_player_turn(%GameSessionServer{next_turn: _l1}, %GamePlayer{letter: _l2}),
-    do: {:error, :wait_for_turn}
 
   defp check_square(game_board, square), do: is_nil(Map.get(game_board, square))
 
@@ -90,4 +86,6 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     ]
 
   def check_winning_line(line, player_letter), do: Enum.all?(line, &(player_letter == &1))
+
+  defp via_tuple(name), do: {:via, Registry, {@registry, name}}
 end
