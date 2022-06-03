@@ -1,49 +1,73 @@
-<h1>Game Session Code: <%= @session_code %>
-</h1>
-<%= if @game_state.player_turn do %>
-  TURN: <%= @game_state.player_turn %>
-    <% end %>
-      <%= if @game_state.status==:game_over and !is_nil(@game_state.winner) do %>
-        <%= @game_state.winner %> has won!
-          <div id={"game-#{@session_code}"}>
-            <%= for r <- 1..3 do %>
-              <div class="row" id={"row-#{r}"}>
-                <%= for c <- 1..3 do %>
-                  <div class="column" id={"col-#{c}"}>
-                    <%=if @game_state.player_turn !=@player.letter do %>
-                      <button class="button button-outline" phx-click="play" phx-value-row={"#{r}"}
-                        phx-value-col={"#{c}"} disabled>
-                        <%= Map.get(@game_state.board, %TicTacToeQuiqup.GameSquare{col: c, row: r}) %>
-                      </button>
-                      <% end %>
-                  </div>
-                  <% end %>
-              </div>
-              <% end %>
-          </div>
+<div class="container">
+  <h1>Game Session Code: <%= @session_code %>
+  </h1>
+  <div class="row">
+    <div class="column">Player Name:</div>
+    <div class="column">
+      <%= @player.name %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">Player ID:</div>
+    <div class="column">
+      <%= @player.id %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column">Player's Letter:</div>
+    <div class="column">
+      <%= @player.letter %>
+    </div>
+  </div>
+  <%= if @game_state.player_turn do %>
+    TURN: <%= @game_state.player_turn %>
+      <%= if @game_state.player_turn==@player.letter do %>
+        (My Turn)
+        <% end %>
           <% end %>
-            <%= if @game_state.status==:game_over and is_nil(@game_state.winner) do %>
-              It's a TIE....
-              <% end %>
-                <%= if @game_state.status !=:game_over and is_nil(@game_state.winner) do %>
-                  <div id={"game-#{@session_code}"}>
-                    <%= for r <- 1..3 do %>
-                      <div class="row" id={"row-#{r}"}>
-                        <%= for c <- 1..3 do %>
-                          <div class="column" id={"col-#{c}"}>
-                            <%=if @game_state.player_turn !=@player.letter do %>
-                              <button class="button button-outline" phx-click="play" phx-value-row={"#{r}"}
-                                phx-value-col={"#{c}"} disabled>
-                                <%= Map.get(@game_state.board, %TicTacToeQuiqup.GameSquare{col: c, row: r}) %>
-                              </button>
-                              <% else %>
-                                <button class="button" phx-click="play" phx-value-row={"#{r}"} phx-value-col={"#{c}"}>
-                                  <%= Map.get(@game_state.board, %TicTacToeQuiqup.GameSquare{col: c, row: r}) %>
-                                </button>
+            <%= if @game_state.status==:game_over and !is_nil(@game_state.winner) do %>
+              <%= @game_state.winner %> has won!
+                <div id={"game-#{@session_code}"}>
+                  <%= for r <- 1..3 do %>
+                    <div class="row" id={"row-#{r}"}>
+                      <%= for c <- 1..3 do %>
+                        <div class="column" id={"col-#{c}"}>
+                          <%=if @game_state.player_turn !=@player.letter do %>
+                            <button class="button button-outline" phx-click="play" phx-value-row={"#{r}"}
+                              phx-value-col={"#{c}"} disabled>
+                              <%= Map.get(@game_state.board, %TicTacToeQuiqup.GameSquare{col: c, row: r}) %>
+                            </button>
+                            <% end %>
+                        </div>
+                        <% end %>
+                    </div>
+                    <% end %>
+                </div>
+                <% end %>
+                  <%= if @game_state.status==:game_over and is_nil(@game_state.winner) do %>
+                    It's a TIE....
+                    <% end %>
+                      <%= if @game_state.status !=:game_over and is_nil(@game_state.winner) do %>
+                        <div id={"game-#{@session_code}"}>
+                          <%= for r <- 1..3 do %>
+                            <div class="row" id={"row-#{r}"}>
+                              <%= for c <- 1..3 do %>
+                                <div class="column" id={"col-#{c}"}>
+                                  <%=if @game_state.player_turn !=@player.letter do %>
+                                    <button class="button button-outline" phx-click="play" phx-value-row={"#{r}"}
+                                      phx-value-col={"#{c}"} disabled>
+                                      <%= Map.get(@game_state.board, %TicTacToeQuiqup.GameSquare{col: c, row: r}) %>
+                                    </button>
+                                    <% else %>
+                                      <button class="button" phx-click="play" phx-value-row={"#{r}"}
+                                        phx-value-col={"#{c}"}>
+                                        <%= Map.get(@game_state.board, %TicTacToeQuiqup.GameSquare{col: c, row: r}) %>
+                                      </button>
+                                      <% end %>
+                                </div>
                                 <% end %>
-                          </div>
-                          <% end %>
-                      </div>
-                      <% end %>
-                  </div>
-                  <% end %>
+                            </div>
+                            <% end %>
+                        </div>
+                        <% end %>
+</div>

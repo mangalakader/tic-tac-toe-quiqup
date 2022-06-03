@@ -15,7 +15,7 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
       send(self(), :load_game_session_state)
     end
 
-    with %GameSessionState{} = state <- GameSessionServer.state(session_code),
+    with {:ok, %GameSessionState{} = state} <- GameSessionServer.state(session_code),
          {:ok, player} <- GameSessionState.find_player(state, player_id) do
       {:ok,
        assign(socket,
@@ -55,7 +55,7 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
            String.to_integer(col),
            player_id
          ) do
-      :ok ->
+      {:ok, _state} ->
         {:noreply, socket}
 
       {:error, reason} ->
@@ -72,7 +72,7 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
     Process.send_after(self(), :load_game_session_state, 5000)
 
     case GameSessionServer.state(code) do
-      %GameSessionState{} = state ->
+      {:ok, %GameSessionState{} = state} ->
         {:ok, player} = GameSessionState.find_player(state, socket.assigns.player_id)
         {:noreply, assign(socket, game_state: state, player: player) |> clear_flash()}
 

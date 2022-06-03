@@ -49,7 +49,7 @@ defmodule TicTacToeQuiqup.GameSessionServer do
 
       {:error, :already_started} ->
         case join(session_code, player) do
-          :ok -> {:ok, :joined}
+          {:ok, _state} -> {:ok, :joined}
           {:error, _reason} = error -> error
         end
     end
@@ -72,7 +72,8 @@ defmodule TicTacToeQuiqup.GameSessionServer do
   end
 
   @impl true
-  def handle_call(:current_state, _from, %GameSessionState{} = state), do: {:reply, state, state}
+  def handle_call(:current_state, _from, %GameSessionState{} = state),
+    do: {:reply, {:ok, state}, state}
 
   def handle_call(
         {:join_game, player} = event,
@@ -82,7 +83,7 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     Logger.info("[Join Game] | #{state.session_code} | #{player.letter} joins!!!")
 
     case GameSessionState.event(state, event) do
-      {:ok, new_state} -> {:reply, :ok, new_state}
+      {:ok, new_state} -> {:reply, {:ok, new_state}, new_state}
       {:error, reason} -> {:reply, {:error, reason}, state}
     end
   end
@@ -93,7 +94,7 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     case GameSessionState.event(state, {:place, row, col, player_id}) do
       {:ok, new_state} ->
         broadcast_state(new_state)
-        {:reply, new_state, new_state}
+        {:reply, {:ok, new_state}, new_state}
 
       {:error, reason} ->
         broadcast_state(state)

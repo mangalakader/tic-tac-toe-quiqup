@@ -17,8 +17,8 @@ defmodule TicTacToeQuiqupWeb.Router do
   scope "/", TicTacToeQuiqupWeb do
     pipe_through :browser
 
+    live "/", GameLive.Player, :new
     live "/games/new", GameLive.Game, :new
-    live "/games/player", GameLive.Player, :new
   end
 
   scope "/api", TicTacToeQuiqupWeb do

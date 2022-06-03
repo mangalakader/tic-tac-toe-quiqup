@@ -100,6 +100,16 @@ defmodule TicTacToeQuiqup.GameSessionState do
     end
   end
 
+  def player_letter(%GameSessionState{players: players}) do
+    players_size = length(players)
+
+    cond do
+      players_size == 0 -> {:ok, :x}
+      players_size == 1 -> {:ok, players |> List.first() |> Map.get(:letter) |> toggle_turn()}
+      true -> {:error, "Game can be played only by maximum of 2 players"}
+    end
+  end
+
   def opponent(state, player), do: state.players |> Enum.find(&(&1.id != player.id))
 
   defp toggle_turn(:x), do: :o

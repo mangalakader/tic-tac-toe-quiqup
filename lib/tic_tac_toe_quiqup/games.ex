@@ -3,17 +3,32 @@ defmodule TicTacToeQuiqup.Games do
   TicTacToeQuiqup Games Context for managing gaming sessions
   """
 
-  import TicTacToeQuiqup.Utilities,
-    only: [generate_game_session_code: 0, generate_game_session_code: 1]
+  import TicTacToeQuiqup.Utilities, only: [check_game_session_code: 1]
 
   alias TicTacToeQuiqup.{GamePlayer, GameSessionServer, GameSessionState}
 
-  def create_game(player_name, letter, session_code \\ generate_game_session_code()) do
-    with %GamePlayer{} = player <-
-           GamePlayer.new(generate_game_session_code(12), player_name, letter),
-         {:ok, _started} <- GameSessionServer.start_or_join(session_code, player),
-         %GameSessionState{} = state <- GameSessionServer.state(session_code) do
-      {:ok, %{session_code: session_code, state: state}}
+  def create_game(session_code, player_name) do
+    new_session_code = check_game_session_code(session_code)
+
+    with {:ok, %GameSessionState{} = game_state} <- GameSessionServer.state(new_session_code),
+         {:ok, player_letter} <- GameSessionState.player_letter(game_state),
+         {:ok, new_player} <- GamePlayer.new(nil, player_name, player_letter),
+         {:ok, _state} <-
+           GameSessionServer.start_or_join(session_code, new_player),
+         {:ok, %GameSessionState{} = game_state} <- GameSessionServer.state(new_session_code) do
+      {:ok, %{session_code: session_code, state: game_state, player: new_player}}
+    else
+      {:error, "Game not found!"} -> new_game(new_session_code, player_name)
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
+  def new_game(new_session_code, player_name) do
+    with {:ok, new_player} <- GamePlayer.new_x(player_name),
+         {:ok, _state} <-
+           GameSessionServer.start_or_join(new_session_code, new_player),
+         {:ok, %GameSessionState{} = game_state} <- GameSessionServer.state(new_session_code) do
+      {:ok, %{session_code: new_session_code, state: game_state, player: new_player}}
     else
       {:error, reason} -> {:error, reason}
     end
@@ -31,7 +46,7 @@ defmodule TicTacToeQuiqup.Games do
 
   def move(session_code, row, col, player_id) do
     case GameSessionServer.play(session_code, row, col, player_id) do
-      %GameSessionState{} = state ->
+      {:ok, %GameSessionState{} = state} ->
         {:ok, %{session_code: session_code, state: state}}
 
       {:error, reason} ->
