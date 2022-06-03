@@ -17,13 +17,15 @@ defmodule TicTacToeQuiqupWeb.Router do
   scope "/", TicTacToeQuiqupWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    live "/games/new", GameLive.Game, :new
+    live "/games/player", GameLive.Player, :new
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TicTacToeQuiqupWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", TicTacToeQuiqupWeb do
+    pipe_through :api
+
+    resources "/games", GameController, except: [:edit]
+  end
 
   # Enables LiveDashboard only for development
   #

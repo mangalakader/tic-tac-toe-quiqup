@@ -5,9 +5,12 @@ defmodule TicTacToeQuiqup.GameSessionServer do
 
   @registry TicTacToeQuiqup.Registry
 
-  alias TicTacToeQuiqup.{GamePlayer, GameSessionState, GameSquare}
+  require Logger
 
-  use GenServer
+  alias Phoenix.PubSub
+  alias TicTacToeQuiqup.{GamePlayer, GameSessionState}
+
+  use GenServer, restart: :transient
 
   @doc false
   def start_link([session_code: session_code, player: _player] = args) do
@@ -17,75 +20,111 @@ defmodule TicTacToeQuiqup.GameSessionServer do
            name: via_tuple(session_code)
          ) do
       {:ok, pid} -> {:ok, pid}
-      {:error, {:already_started, pid}} -> {:ok, pid}
+      {:error, {:already_started, _pid}} -> :already_started
     end
   end
 
   @impl true
   def init(session_code: session_code, player: player),
-    do: GameSessionState.event({:new_game, session_code, player})
+    do: GameSessionState.event({:start_game, session_code, player})
 
-  def play(game_session_state, row, col, player) do
-    with {:ok, _player_letter} <- GamePlayer.validate_player(player),
-         {:ok, square} <- GameSquare.new(row, col),
-         {:ok, state} <- update_game_session(game_session_state, square, player),
-         :continue <- winner(state.board, player.letter) do
-      {:ok, state}
+  def name(session_code), do: via_tuple(session_code)
+
+  def state(session_code) do
+    if check_game?(session_code) do
+      GenServer.call(via_tuple(session_code), :current_state)
     else
-      {:ok, player_letter} -> "#{player_letter} has won!"
-      :tie -> "Game is a tie!"
-      {:error, :occupied} -> "#{player.letter} try some other square!"
+      {:error, "Game not found!"}
     end
   end
 
-  defp update_game_session(game_session_state, square, player) do
-    case check_square(game_session_state.board, square) do
-      true ->
-        latest_board =
-          game_session_state.board
-          |> Map.put(square, player.letter)
+  def start_or_join(session_code, %GamePlayer{} = player) do
+    case DynamicSupervisor.start_child(
+           TicTacToeQuiqup.GameSupervisor,
+           {__MODULE__, [session_code: session_code, player: player]}
+         ) do
+      {:ok, _pid} ->
+        Logger.info("[Start Game] | #{session_code} | #{player.letter} started a game!!!")
+        {:ok, :started}
 
-        {:ok, %{game_session_state | board: latest_board, next_turn: toggle_turn(player.letter)}}
-
-      false ->
-        {:error, :occupied}
+      {:error, :already_started} ->
+        case join(session_code, player) do
+          :ok -> {:ok, :joined}
+          {:error, _reason} = error -> error
+        end
     end
   end
 
-  defp check_square(game_board, square), do: is_nil(Map.get(game_board, square))
-
-  defp toggle_turn(:x), do: :o
-  defp toggle_turn(:o), do: :x
-
-  defp check_game_board(game_board) do
-    case game_board |> Enum.any?(fn {_square, value} -> is_nil(value) end) do
-      true -> :continue
-      false -> :tie
+  def join(session_code, player) do
+    if check_game?(session_code) do
+      GenServer.call(via_tuple(session_code), {:join_game, player})
+    else
+      {:error, "Game not found!"}
     end
   end
 
-  defp winner(board, player_letter) do
-    rows = 1..3 |> Enum.map(&get_rows(board, &1))
-    cols = 1..3 |> Enum.map(&get_cols(board, &1))
-    diagonals = get_diagonals(board)
-
-    result =
-      (rows ++ cols ++ diagonals)
-      |> Enum.any?(&check_winning_line(&1, player_letter))
-
-    if result, do: {:ok, player_letter}, else: check_game_board(board)
+  def play(session_code, row, col, player_id) do
+    if check_game?(session_code) do
+      GenServer.call(via_tuple(session_code), {:place, row, col, player_id})
+    else
+      {:error, "Game not found!"}
+    end
   end
 
-  defp get_rows(board, row), do: for({%{col: _c, row: r}, v} <- board, row == r, do: v)
-  defp get_cols(board, col), do: for({%{col: c, row: _r}, v} <- board, col == c, do: v)
+  @impl true
+  def handle_call(:current_state, _from, %GameSessionState{} = state), do: {:reply, state, state}
 
-  defp get_diagonals(board),
-    do: [
-      for({%{col: c, row: r}, v} <- board, r == c, do: v),
-      for({%{col: c, row: r}, v} <- board, 4 == c + r, do: v)
-    ]
+  def handle_call(
+        {:join_game, player} = event,
+        _from,
+        %GameSessionState{} = state
+      ) do
+    Logger.info("[Join Game] | #{state.session_code} | #{player.letter} joins!!!")
 
-  def check_winning_line(line, player_letter), do: Enum.all?(line, &(player_letter == &1))
+    case GameSessionState.event(state, event) do
+      {:ok, new_state} -> {:reply, :ok, new_state}
+      {:error, reason} -> {:reply, {:error, reason}, state}
+    end
+  end
+
+  def handle_call({:place, row, col, player_id}, _from, %GameSessionState{} = state) do
+    Logger.info("[Move] | #{state.session_code} | #{player_id} places in {#{row}, #{col}}")
+
+    case GameSessionState.event(state, {:place, row, col, player_id}) do
+      {:ok, new_state} ->
+        broadcast_state(new_state)
+        {:reply, new_state, new_state}
+
+      {:error, reason} ->
+        broadcast_state(state)
+        {:reply, {:error, reason}, state}
+    end
+  end
+
+  @impl true
+  def handle_info(:end_game, %GameSessionState{} = state) do
+    Logger.info("[Inactivity] #{state.session_code} ended")
+    {:stop, :normal, state}
+  end
+
+  defp broadcast_state(game_session_state) do
+    Logger.info(
+      "[Broadcast] #{game_session_state.session_code} | #{game_session_state.status} | Next Turn: #{game_session_state.player_turn} | Winner: #{game_session_state.winner}"
+    )
+
+    PubSub.broadcast(
+      TicTacToeQuiqup.PubSub,
+      "session:#{game_session_state.session_code}",
+      {:game_session_state, game_session_state}
+    )
+  end
 
   defp via_tuple(name), do: {:via, Registry, {@registry, name}}
+
+  defp check_game?(session_code) do
+    case Registry.lookup(@registry, session_code) do
+      [{_pid, _any}] -> true
+      [] -> false
+    end
+  end
 end

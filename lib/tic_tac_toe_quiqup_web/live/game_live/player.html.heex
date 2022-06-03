@@ -1,0 +1,20 @@
+<h1>Player Information</h1>
+
+<.form let={f} for={:player} phx-change="validate" phx-submit="save">
+  <%= label f, :player_name %>
+    <%= text_input f, :player_name, value: @player_name %>
+      <%= error_tag f, :player_name %>
+
+        <%= label f, :letter %>
+          <%= select f, :letter, ["X", "O" ], value: @letter %>
+            <%= error_tag f, :letter %>
+              <%= label f, :session_code %>
+                <%= text_input f, :session_code, value: @session_code %>
+                  <%= error_tag f, :session_code %>
+
+                    <%= if @session_code do %>
+                      <%= submit "Join Game" %>
+                        <%= else %>
+                          <%= submit "Start Game" %>
+                            <%= end %>
+</.form>

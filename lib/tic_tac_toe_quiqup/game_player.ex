@@ -2,12 +2,21 @@ defmodule TicTacToeQuiqup.GamePlayer do
   @moduledoc """
   TicTacToe Game Player Specific Functions
   """
+  @enforce_keys [:id, :name, :letter]
 
-  @enforce_keys [:name, :letter]
+  require Protocol
 
-  defstruct name: nil, letter: nil
+  defstruct id: nil, name: nil, letter: nil
 
-  def init(name, letter), do: %__MODULE__{name: name, letter: letter}
+  def new(id, name, letter) do
+    case letter(letter) do
+      {:ok, atom_letter} ->
+        %__MODULE__{id: id, name: name, letter: atom_letter}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
 
   def validate_player(%__MODULE__{name: _name, letter: player_letter}), do: letter(player_letter)
 
@@ -18,4 +27,6 @@ defmodule TicTacToeQuiqup.GamePlayer do
       true -> {:error, :invalid_player}
     end
   end
+
+  Protocol.derive(Jason.Encoder, __MODULE__)
 end

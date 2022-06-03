@@ -6,6 +6,9 @@ defmodule TicTacToeQuiqupWeb.ErrorView do
   # def render("500.html", _assigns) do
   #   "Internal Server Error"
   # end
+  def render("400.json", %{error: message}) do
+    %{error: %{details: message}}
+  end
 
   # By default, Phoenix returns the status message from
   # the template name. For example, "404.html" becomes
