@@ -27,11 +27,13 @@ defmodule TicTacToeQuiqup.GameSessionState do
   def event(%GameSessionState{players: [_p1, _p2]}, {:join_game, _player}),
     do: {:error, "Game can be played only by maximum of 2 players"}
 
-  def event(%GameSessionState{players: [p1]} = state, {:join_game, p2}) do
+  def event(%GameSessionState{players: [p1]} = state, {:join_game, p2}) when p1 != p2 do
     p2 = %{p2 | letter: toggle_turn(p1.letter)}
-
     {:ok, %{state | players: [p1, p2]}} |> reset_inactivity_time()
   end
+
+  def event(%GameSessionState{players: [_p1]} = state, {:join_game, _p2}),
+    do: {:ok, state} |> reset_inactivity_time()
 
   def event(%GameSessionState{status: :playing}, {:start_game, _code, _player}),
     do: {:error, "Game has already started"}
@@ -92,6 +94,16 @@ defmodule TicTacToeQuiqup.GameSessionState do
 
   def find_player(%GameSessionState{players: players} = _state, player_id) do
     case Enum.find(players, &(&1.id == player_id)) do
+      nil ->
+        {:error, "Player not found!"}
+
+      %GamePlayer{} = player ->
+        {:ok, player}
+    end
+  end
+
+  def find_player(:name, %GameSessionState{players: players} = _state, player_name) do
+    case Enum.find(players, &(&1.name == player_name)) do
       nil ->
         {:error, "Player not found!"}
 
