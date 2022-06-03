@@ -30,7 +30,14 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
       {:error, reason} ->
         socket =
           socket
-          |> assign(session_code: nil)
+          |> assign(
+            session_code: nil,
+            player_id: nil,
+            game_state: nil,
+            page_title: nil,
+            player: nil,
+            name: nil
+          )
           |> put_flash(:error, reason)
           |> push_redirect(to: Routes.game_player_path(socket, :new))
 

@@ -10,9 +10,7 @@ defmodule TicTacToeQuiqup.GamesFixtures do
   def game_fixture(attrs \\ %{}) do
     {:ok, game} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> TicTacToeQuiqup.Games.create_game()
 
     game

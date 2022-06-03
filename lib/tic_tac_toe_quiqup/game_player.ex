@@ -32,7 +32,7 @@ defmodule TicTacToeQuiqup.GamePlayer do
     cond do
       player_letter in ["X", "x", :x] -> {:ok, :x}
       player_letter in ["O", "o", :o] -> {:ok, :o}
-      true -> {:error, :invalid_player}
+      true -> {:error, "Invalid player"}
     end
   end
 
