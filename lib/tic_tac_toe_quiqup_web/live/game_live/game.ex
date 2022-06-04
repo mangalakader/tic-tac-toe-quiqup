@@ -2,7 +2,7 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
   use TicTacToeQuiqupWeb, :live_view
 
   alias Phoenix.PubSub
-  alias TicTacToeQuiqup.{GameSessionServer, GameSessionState}
+  alias TicTacToeQuiqup.{Games, GameSessionState}
 
   @impl true
   def mount(
@@ -15,7 +15,7 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
       send(self(), :load_game_session_state)
     end
 
-    with {:ok, %GameSessionState{} = state} <- GameSessionServer.state(session_code),
+    with {:ok, %{state: %GameSessionState{} = state}} <- Games.get_game(session_code),
          {:ok, player} <- GameSessionState.find_player(state, player_id) do
       {:ok,
        assign(socket,
@@ -56,7 +56,7 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
         %{"col" => col, "row" => row},
         %{assigns: %{session_code: session_code, player_id: player_id}} = socket
       ) do
-    case GameSessionServer.play(
+    case Games.move(
            session_code,
            String.to_integer(row),
            String.to_integer(col),
@@ -78,8 +78,8 @@ defmodule TicTacToeQuiqupWeb.GameLive.Game do
   def handle_info(:load_game_session_state, %{assigns: %{session_code: code}} = socket) do
     Process.send_after(self(), :load_game_session_state, 5000)
 
-    case GameSessionServer.state(code) do
-      {:ok, %GameSessionState{} = state} ->
+    case Games.get_game(code) do
+      {:ok, %{state: %GameSessionState{} = state}} ->
         {:ok, player} = GameSessionState.find_player(state, socket.assigns.player_id)
         {:noreply, assign(socket, game_state: state, player: player) |> clear_flash()}
 
