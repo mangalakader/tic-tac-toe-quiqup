@@ -29,8 +29,8 @@ defmodule TicTacToeQuiqupWeb.GameLive.Player do
           push_redirect(socket,
             to:
               Routes.game_game_path(socket, :new,
-                session_code: session_code,
-                player_id: player.id
+                player_id: player.id,
+                session_code: session_code
               )
           )
 

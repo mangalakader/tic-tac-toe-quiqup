@@ -21,6 +21,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "event/1" do
+    @tag [unit: true, state: true, event: true]
     test "omit default argument - state" do
       assert {:error,
               %{reason: :invalid_game_state_transition, state: _state, action: :random_action}} =
@@ -29,12 +30,14 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "event/2" do
+    @tag [unit: true, state: true, event: true]
     test "invalid action", %{session_state: state} do
       assert {:error,
               %{reason: :invalid_game_state_transition, state: _state, action: :random_action}} =
                GameSessionState.event(state, :random_action)
     end
 
+    @tag [unit: true, state: true, event: true]
     test "status game over", %{session_state: state} do
       assert {:error, "Game completed!"} =
                GameSessionState.event(%{state | status: :game_over}, :random_action)
@@ -42,10 +45,12 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "event/2 - Joining Games" do
+    @tag [unit: true, state: true, event: true]
     test "a game with no players", %{session_state: state, player_one: player_one} do
       assert {:error, "Game not found!"} = GameSessionState.event(state, {:join_game, player_one})
     end
 
+    @tag [unit: true, state: true, event: true]
     test "completed game with 2 valid players", %{
       session_state: state,
       player_one: player_one,
@@ -58,6 +63,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
                )
     end
 
+    @tag [unit: true, state: true, event: true]
     test "running game with 2 valid players", %{
       session_state: state,
       player_one: player_one,
@@ -70,6 +76,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
                )
     end
 
+    @tag [unit: true, state: true, event: true]
     test "running game with 1 valid players", %{
       session_state: state,
       player_one: player_one,
@@ -82,6 +89,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
                )
     end
 
+    @tag [unit: true, state: true, event: true]
     test "same player one through different interface - running game with 1 valid players", %{
       session_state: state,
       player_one: player_one
@@ -95,6 +103,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "event/2 - Starting Games" do
+    @tag [unit: true, state: true, event: true]
     test "a new game", %{session_state: state, player_one: player_one} do
       assert {:ok,
               %GameSessionState{
@@ -105,6 +114,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
               }} = GameSessionState.event(state, {:start_game, "RANDOM", player_one})
     end
 
+    @tag [unit: true, state: true, event: true]
     test "a running game", %{session_state: state, player_one: player_one} do
       assert {:error, "Game has already started"} =
                GameSessionState.event(
@@ -115,6 +125,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "event/2 - Playing Games" do
+    @tag [unit: true, state: true, event: true]
     test "running game - capturing a game square in the game board", %{
       session_state: state,
       player_one: player_one,
@@ -144,6 +155,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert check_game_board == out_game_board
     end
 
+    @tag [unit: true, state: true, event: true]
     test "running game - winner scenario", %{
       session_state: state,
       player_one: player_one,
@@ -176,6 +188,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert check_game_board == out_game_board
     end
 
+    @tag [unit: true, state: true, event: true]
     test "running game - tie scenario", %{
       session_state: state,
       player_one: player_one,
@@ -208,6 +221,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert check_game_board == out_game_board
     end
 
+    @tag [unit: true, state: true, event: true]
     test "running game - invalid player capturing a game square in the game board", %{
       session_state: state,
       player_one: player_one,
@@ -226,6 +240,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
                )
     end
 
+    @tag [unit: true, state: true, event: true]
     test "running game with 1 valid player - capturing a game square in the game board", %{
       session_state: state,
       player_one: player_one
@@ -245,6 +260,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "reset_inactivity_time/1" do
+    @tag [unit: true, state: true]
     test "state has nil as inactivity_timer_ref", %{session_state: state} do
       assert %GameSessionState{inactivity_timer_ref: ref} =
                GameSessionState.reset_inactivity_time(state)
@@ -252,6 +268,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert is_reference(ref)
     end
 
+    @tag [unit: true, state: true]
     test "state has timer_reference as inactivity_timer_ref", %{session_state: state, ref: ref} do
       assert %GameSessionState{inactivity_timer_ref: ref_out} =
                GameSessionState.reset_inactivity_time(%{state | inactivity_timer_ref: ref})
@@ -260,6 +277,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       refute ref_out == ref
     end
 
+    @tag [unit: true, state: true]
     test "return :ok tuple - state has timer_reference as inactivity_timer_ref", %{
       session_state: state,
       ref: ref
@@ -273,6 +291,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "find_player/2" do
+    @tag [unit: true, state: true]
     test "a player with given player id", %{session_state: state, player_one: p1, player_two: p2} do
       new_state = %{state | players: [p1, p2]}
 
@@ -282,6 +301,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert player.letter == p2.letter
     end
 
+    @tag [unit: true, state: true]
     test "error with unknown player id", %{session_state: state, player_one: p1, player_two: p2} do
       new_state = %{state | players: [p1, p2]}
 
@@ -290,6 +310,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "find_player/3" do
+    @tag [unit: true, state: true]
     test "a player with given player name", %{
       session_state: state,
       player_one: p1,
@@ -305,6 +326,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert player.letter == p2.letter
     end
 
+    @tag [unit: true, state: true]
     test "error with unknown player name", %{session_state: state, player_one: p1, player_two: p2} do
       new_state = %{state | players: [p1, p2]}
 
@@ -314,6 +336,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
   end
 
   describe "player_letter/1" do
+    @tag [unit: true, state: true]
     test "determine player two letter with 1 valid player (:x) in game", %{
       session_state: state,
       player_one: p1
@@ -323,6 +346,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert {:ok, :o} = GameSessionState.player_letter(new_state)
     end
 
+    @tag [unit: true, state: true]
     test "determine player two letter with 1 valid player (:o) in game", %{
       session_state: state,
       player_two: p2
@@ -332,12 +356,14 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert {:ok, :x} = GameSessionState.player_letter(new_state)
     end
 
+    @tag [unit: true, state: true]
     test "determine player letter with no player in game", %{
       session_state: state
     } do
       assert {:ok, :x} = GameSessionState.player_letter(state)
     end
 
+    @tag [unit: true, state: true]
     test "error - determine player letter with 2 valid players in game", %{
       session_state: state,
       player_one: p1,

@@ -3,7 +3,7 @@ defmodule TicTacToeQuiqup.GamesFixtures do
   This module defines test helpers
   """
 
-  alias TicTacToeQuiqup.GameSquare
+  alias TicTacToeQuiqup.{Games, GameSquare}
 
   def winning_game_board(letter \\ :x) do
     toggled_letter = if letter == :x, do: :o, else: :x
@@ -45,5 +45,10 @@ defmodule TicTacToeQuiqup.GamesFixtures do
   def update_game_board(letter, row, col, board) do
     {:ok, game_square} = GameSquare.new(row, col)
     board |> Map.put(game_square, letter)
+  end
+
+  def create_game(_args) do
+    {:ok, game} = Games.create_game("", "Test Player 1")
+    %{game: game}
   end
 end

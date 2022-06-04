@@ -19,6 +19,7 @@ defmodule TicTacToeQuiqup.GameSessionServerTest do
   end
 
   describe "GameSessionServer - User Callbacks" do
+    @tag [unit: true, state: true, server: true]
     test "name/1 - via_tuple callback", %{session_code: session_code} do
       assert {:via, Registry, {TicTacToeQuiqup.Registry, new_session_code}} =
                GameSessionServer.name(session_code)
@@ -26,22 +27,26 @@ defmodule TicTacToeQuiqup.GameSessionServerTest do
       assert new_session_code == session_code
     end
 
+    @tag [unit: true, state: true, server: true]
     test "state/1 - get current game server session state", %{session_code: session_code} do
       assert {:ok, %GameSessionState{} = state} = GameSessionServer.state(session_code)
 
       assert state.session_code == session_code
     end
 
+    @tag [unit: true, state: true, server: true]
     test "state/1 - game not found" do
       assert {:error, "Game not found!"} = GameSessionServer.state("RANDOM")
     end
 
+    @tag [unit: true, state: true, server: true]
     test "start_or_join/2 - start a new game", %{player_one: p1} do
       new_session_code = Utilities.generate_rand_str()
 
       assert {:ok, :started} = GameSessionServer.start_or_join(new_session_code, p1)
     end
 
+    @tag [unit: true, state: true, server: true]
     test "start_or_join/2 - join a game using old session code", %{
       session_code: session_code,
       player_one: p1
@@ -49,6 +54,7 @@ defmodule TicTacToeQuiqup.GameSessionServerTest do
       assert {:ok, :joined} = GameSessionServer.start_or_join(session_code, p1)
     end
 
+    @tag [unit: true, state: true, server: true]
     test "start_or_join/2 - invalid player", %{
       session_code: session_code,
       player_one: p1,
@@ -60,6 +66,7 @@ defmodule TicTacToeQuiqup.GameSessionServerTest do
       assert {:error, _message} = GameSessionServer.start_or_join(session_code, invalid_player)
     end
 
+    @tag [unit: true, state: true, server: true]
     test "play/4 - capture location using session code", %{
       session_code: session_code,
       player_one: p1,
@@ -79,6 +86,7 @@ defmodule TicTacToeQuiqup.GameSessionServerTest do
   end
 
   describe "GameSessionServer - Testing GenServer Callbacks for user created scenarios" do
+    @tag [unit: true, state: true, server: true]
     test "ending a game by passing an info message", %{
       game_server: pid
     } do

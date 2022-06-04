@@ -13,6 +13,7 @@ defmodule TicTacToeQuiqup.GamesTest do
   end
 
   describe "create_game/2" do
+    @tag [unit: true, context: true]
     test "create a new game using session code and player name" do
       assert {:ok,
               %{
@@ -22,6 +23,7 @@ defmodule TicTacToeQuiqup.GamesTest do
               }} = Games.create_game(nil, "RANDOM")
     end
 
+    @tag [unit: true, context: true]
     test "join an old game using session code and existing player name", %{
       game: %{session_code: session_code, player: player}
     } do
@@ -35,6 +37,7 @@ defmodule TicTacToeQuiqup.GamesTest do
       assert session_code == new_session_code
     end
 
+    @tag [unit: true, context: true]
     test "join an old game using session code and new player", %{
       game: %{session_code: session_code}
     } do
@@ -50,6 +53,7 @@ defmodule TicTacToeQuiqup.GamesTest do
   end
 
   describe "get_game/1" do
+    @tag [unit: true, context: true]
     test "game state retrieval", %{game: %{session_code: session_code}} do
       assert {:ok,
               %{
@@ -60,12 +64,14 @@ defmodule TicTacToeQuiqup.GamesTest do
       assert session_code == new_session_code
     end
 
+    @tag [unit: true, context: true]
     test "error for unknown session code" do
       assert {:error, "Game not found!"} = Games.get_game("TESTGAME")
     end
   end
 
   describe "move/4" do
+    @tag [unit: true, context: true]
     test "capture a location in the game board", %{
       game: %{session_code: session_code, player: player_one}
     } do
@@ -88,12 +94,14 @@ defmodule TicTacToeQuiqup.GamesTest do
       assert check_game_board == out_board
     end
 
+    @tag [unit: true, context: true]
     test "error scenario - waiting for player 2", %{
       game: %{session_code: session_code, player: player}
     } do
       assert {:error, _message} = Games.move(session_code, 1, 1, player.id)
     end
 
+    @tag [unit: true, context: true]
     test "error scenario - square already captured", %{
       game: %{session_code: session_code, player: player}
     } do

@@ -17,6 +17,8 @@ defmodule TicTacToeQuiqupWeb.GameController do
     end
   end
 
+  def create(_conn, _params), do: {:error, "Invalid Params!"}
+
   def show(conn, %{"id" => session_code}) do
     with {:ok, %{session_code: session_code, state: state}} <-
            Games.get_game(session_code) do
@@ -25,6 +27,8 @@ defmodule TicTacToeQuiqupWeb.GameController do
       |> render("show.json", %{session_code: session_code, state: state})
     end
   end
+
+  def show(_conn, _params), do: {:error, "Invalid Params!"}
 
   def update(conn, %{
         "player_id" => player_id,
@@ -39,4 +43,6 @@ defmodule TicTacToeQuiqupWeb.GameController do
       |> render("show.json", %{session_code: session_code, state: state})
     end
   end
+
+  def update(_conn, _params), do: {:error, "Invalid Params!"}
 end

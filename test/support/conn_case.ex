@@ -22,6 +22,7 @@ defmodule TicTacToeQuiqupWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
+      import TicTacToeQuiqup.GamesFixtures
       import TicTacToeQuiqupWeb.ConnCase
 
       alias TicTacToeQuiqupWeb.Router.Helpers, as: Routes
