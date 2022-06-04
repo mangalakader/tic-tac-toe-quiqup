@@ -1,4 +1,7 @@
 defmodule TicTacToeQuiqupWeb.GameLive.Game do
+  @moduledoc """
+  LiveView Game Module
+  """
   use TicTacToeQuiqupWeb, :live_view
 
   alias Phoenix.PubSub

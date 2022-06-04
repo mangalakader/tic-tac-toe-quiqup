@@ -1,4 +1,7 @@
 defmodule TicTacToeQuiqupWeb.GameLive.Player do
+  @moduledoc """
+  LiveView Module for Player Information
+  """
   use TicTacToeQuiqupWeb, :live_view
 
   alias TicTacToeQuiqup.Games
