@@ -12,6 +12,7 @@ defmodule TicTacToeQuiqup.DataCase do
   using do
     quote do
       import TicTacToeQuiqup.DataCase
+      import TicTacToeQuiqup.GamesFixtures
     end
   end
 end

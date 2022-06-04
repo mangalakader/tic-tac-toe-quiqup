@@ -71,7 +71,6 @@ defmodule TicTacToeQuiqup.GameSessionState do
          {:ok, new_state} <- update_game_session_state(state, square, player) do
       {:ok, reset_inactivity_time(new_state)}
     else
-      false -> {:error, "Invalid Player!"}
       {:error, reason} -> {:error, reason}
     end
   end
@@ -121,8 +120,6 @@ defmodule TicTacToeQuiqup.GameSessionState do
       true -> {:error, "Game can be played only by maximum of 2 players"}
     end
   end
-
-  def opponent(state, player), do: state.players |> Enum.find(&(&1.id != player.id))
 
   defp toggle_turn(:x), do: :o
   defp toggle_turn(:o), do: :x
