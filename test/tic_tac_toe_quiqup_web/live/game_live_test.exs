@@ -2,103 +2,107 @@ defmodule TicTacToeQuiqupWeb.GameLiveTest do
   use TicTacToeQuiqupWeb.ConnCase
 
   import Phoenix.LiveViewTest
+  alias TicTacToeQuiqup.Games
 
-  # @create_attrs %{}
-  # @update_attrs %{}
-  # @invalid_attrs %{}
+  describe "Show Game Page for Players" do
+    setup [:create_game]
 
-  # defp create_game(_) do
-  #   game = game_fixture()
-  #   %{game: game}
-  # end
+    @tag :live
+    test "displays game page", %{
+      conn: conn,
+      game: %{session_code: session_code, player: player_one}
+    } do
+      {:ok, game_view, _html} =
+        live(
+          conn,
+          Routes.game_game_path(conn, :new, session_code: session_code, player_id: player_one.id)
+        )
 
-  # describe "Index" do
-  #   setup [:create_game]
+      assert page_title(game_view) =~ "Game ID: #{session_code} · Quiqup"
+    end
 
-  #   test "lists all games", %{conn: conn} do
-  #     {:ok, _index_live, html} = live(conn, Routes.game_index_path(conn, :index))
+    @tag :live
+    test "displays game page for player 2", %{
+      conn: conn,
+      game: %{session_code: session_code, player: player_one}
+    } do
+      {:ok, game_view, _html} =
+        live(
+          conn,
+          Routes.game_game_path(conn, :new, session_code: session_code, player_id: player_one.id)
+        )
 
-  #     assert html =~ "Listing Games"
-  #   end
+      assert page_title(game_view) =~ "Game ID: #{session_code} · Quiqup"
 
-  #   test "saves new game", %{conn: conn} do
-  #     {:ok, index_live, _html} = live(conn, Routes.game_index_path(conn, :index))
+      {:ok, %{state: %{players: players}, player: player_two}} =
+        Games.create_game(session_code, "Test Player 2")
 
-  #     assert index_live |> element("a", "New Game") |> render_click() =~
-  #              "New Game"
+      assert length(players) == 2
 
-  #     assert_patch(index_live, Routes.game_index_path(conn, :new))
+      {:ok, game_view_2, _html} =
+        live(
+          conn,
+          Routes.game_game_path(conn, :new, session_code: session_code, player_id: player_two.id)
+        )
 
-  #     assert index_live
-  #            |> form("#game-form", game: @invalid_attrs)
-  #            |> render_change() =~ "can&#39;t be blank"
+      assert page_title(game_view_2) =~ "Game ID: #{session_code} · Quiqup"
+    end
 
-  #     {:ok, _, html} =
-  #       index_live
-  #       |> form("#game-form", game: @create_attrs)
-  #       |> render_submit()
-  #       |> follow_redirect(conn, Routes.game_index_path(conn, :index))
+    @tag :live
+    test "Each players makes a move", %{
+      conn: conn,
+      game: %{session_code: session_code, player: player_one}
+    } do
+      {:ok, game_view, _html} =
+        live(
+          conn,
+          Routes.game_game_path(conn, :new, session_code: session_code, player_id: player_one.id)
+        )
 
-  #     assert html =~ "Game created successfully"
-  #   end
+      assert page_title(game_view) =~ "Game ID: #{session_code} · Quiqup"
 
-  #   test "updates game in listing", %{conn: conn, game: game} do
-  #     {:ok, index_live, _html} = live(conn, Routes.game_index_path(conn, :index))
+      {:ok, %{state: %{players: players}, player: player_two}} =
+        Games.create_game(session_code, "Test Player 2")
 
-  #     assert index_live |> element("#game-#{game.id} a", "Edit") |> render_click() =~
-  #              "Edit Game"
+      assert length(players) == 2
 
-  #     assert_patch(index_live, Routes.game_index_path(conn, :edit, game))
+      {:ok, game_view_2, _html} =
+        live(
+          conn,
+          Routes.game_game_path(conn, :new, session_code: session_code, player_id: player_two.id)
+        )
 
-  #     assert index_live
-  #            |> form("#game-form", game: @invalid_attrs)
-  #            |> render_change() =~ "can&#39;t be blank"
+      assert page_title(game_view_2) =~ "Game ID: #{session_code} · Quiqup"
 
-  #     {:ok, _, html} =
-  #       index_live
-  #       |> form("#game-form", game: @update_attrs)
-  #       |> render_submit()
-  #       |> follow_redirect(conn, Routes.game_index_path(conn, :index))
+      assert game_view
+             |> element("div#turn")
+             |> render() =~
+               "<div id=\"turn\">\n\n      TURN: x\n\n          (My Turn)\n\n\n  </div>"
 
-  #     assert html =~ "Game updated successfully"
-  #   end
+      assert game_view
+             |> element("button#square-11")
+             |> render_click() =~ "o"
 
-  #   test "deletes game in listing", %{conn: conn, game: game} do
-  #     {:ok, index_live, _html} = live(conn, Routes.game_index_path(conn, :index))
+      assert game_view
+             |> element("div#turn")
+             |> render() =~ "TURN: o"
 
-  #     assert index_live |> element("#game-#{game.id} a", "Delete") |> render_click()
-  #     refute has_element?(index_live, "#game-#{game.id}")
-  #   end
-  # end
+      assert game_view_2
+             |> element("div#turn")
+             |> render() =~
+               "<div id=\"turn\">\n\n      TURN: o\n\n          (My Turn)\n\n\n  </div>"
 
-  # describe "Show" do
-  #   setup [:create_game]
+      assert game_view_2
+             |> element("button#square-11")
+             |> render_click() =~ "Square already taken by a player!"
 
-  #   test "displays game", %{conn: conn, game: game} do
-  #     {:ok, _show_live, html} = live(conn, Routes.game_show_path(conn, :show, game))
+      assert game_view_2
+             |> element("button#square-12")
+             |> render_click() =~ "x"
 
-  #     assert html =~ "Show Game"
-  #   end
-
-  #   test "updates game within modal", %{conn: conn, game: game} do
-  #     {:ok, show_live, _html} = live(conn, Routes.game_show_path(conn, :show, game))
-
-  #     assert show_live |> element("a", "Edit") |> render_click() =~
-  #              "Edit Game"
-
-  #     assert_patch(show_live, Routes.game_show_path(conn, :edit, game))
-
-  #     assert show_live
-  #            |> form("#game-form", game: @invalid_attrs)
-  #            |> render_change() =~ "can&#39;t be blank"
-
-  #     {:ok, _, html} =
-  #       show_live
-  #       |> form("#game-form", game: @update_attrs)
-  #       |> render_submit()
-  #       |> follow_redirect(conn, Routes.game_show_path(conn, :show, game))
-
-  #     assert html =~ "Game updated successfully"
-  #   end
-  # end
+      assert game_view_2
+             |> element("div#turn")
+             |> render() =~ "TURN: x"
+    end
+  end
 end
