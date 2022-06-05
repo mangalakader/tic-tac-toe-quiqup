@@ -1,6 +1,6 @@
 defmodule TicTacToeQuiqup.Types.GamePlayer do
   @moduledoc """
-  Type Specs for GameSquare Module
+  Type Specs for GamePlayer Module
   """
 
   @type letters() :: binary() | :x | :o | nil
