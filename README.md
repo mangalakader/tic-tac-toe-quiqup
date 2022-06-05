@@ -1,6 +1,6 @@
 # TicTacToe Game
 
-[![Contributors][contributors-shield]][contributors-url]
+![Contributors][contributors-shield]
 
 ![Tic-Tac-Toe.png](./docs/images/tic-tac-toe.png)
 
@@ -23,4 +23,5 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
 
-[contributors-shield]: https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge
+[contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
+[tic-tac-toe-logo-attr]: <https://www.flaticon.com/free-icons/tic-tac-toe> "Tic-tac-toe icons created by Vitaly Gorbachev"
