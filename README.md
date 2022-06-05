@@ -112,7 +112,7 @@ For either creating a new game or joining an existing game, the request is the s
 ```bash
 curl -X POST "http://localhost:4000/api/games" -H "Content-type: application/json" --data '{"player_name": "Test Player 1", "session_code": ""}'
 ```
-##### Response Code
+##### Response Code - Success
 
 ```bash
 201
@@ -174,7 +174,12 @@ curl -X POST "http://localhost:4000/api/games" -H "Content-type: application/jso
       {
         "id": "CTPEXO7ES4XQEWNPXF5Q",
         "letter": "x",
-        "name": "2"
+        "name": "Test Player 1"
+      },
+      {
+        "id": "ATPEXOERTXDFWNPXGHY",
+        "letter": "o",
+        "name": "Test Player 2"
       }
     ],
     "session_code": "AF33I",
@@ -184,12 +189,188 @@ curl -X POST "http://localhost:4000/api/games" -H "Content-type: application/jso
 }
 ```
 
+#### Capturing a Square in the Game or Updating the Game Board
+
+##### Request
+
+```bash
+curl -X PUT "http://localhost:4000/api/games/AF33I" -H "Content-type: application/json" --data '{"player_id": "CTPEXO7ES4XQEWNPXF5Q", "row": 1, "col": 2}'
+```
+##### Response Code
+
+```bash
+200
+```
+##### Response Body - Success
+
+```json
+{
+  "data": {
+    "board": [
+      {
+        "col": 1,
+        "row": 1,
+        "value": "x"
+      },
+      {
+        "col": 1,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 1,
+        "row": 3,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 3,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 3,
+        "value": null
+      }
+    ],
+    "player_turn": "o",
+    "players": [
+      {
+        "id": "CTPEXO7ES4XQEWNPXF5Q",
+        "letter": "x",
+        "name": "Test Player 1"
+      },
+      {
+        "id": "ATPEXOERTXDFWNPXGHY",
+        "letter": "o",
+        "name": "Test Player 2"
+      }
+    ],
+    "session_code": "AF33I",
+    "status": "playing",
+    "winner": null
+  }
+}
+```
+
+#### Getting the game board or Current state of the game
+
+##### Request
+
+```bash
+curl -X GET "http://localhost:4000/api/games/AF33I"
+```
+##### Response Code
+
+```bash
+200
+```
+##### Response Body - Success
+
+```json
+{
+  "data": {
+    "board": [
+      {
+        "col": 1,
+        "row": 1,
+        "value": "x"
+      },
+      {
+        "col": 1,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 1,
+        "row": 3,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 3,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 3,
+        "value": null
+      }
+    ],
+    "player_turn": "o",
+    "players": [
+      {
+        "id": "CTPEXO7ES4XQEWNPXF5Q",
+        "letter": "x",
+        "name": "Test Player 1"
+      },
+      {
+        "id": "ATPEXOERTXDFWNPXGHY",
+        "letter": "o",
+        "name": "Test Player 2"
+      }
+    ],
+    "session_code": "AF33I",
+    "status": "playing",
+    "winner": null
+  }
+}
+```
+
+#### Error Responses
+
+##### Response Code - Error
+
+```bash
+400
+```
+
 ##### Response Body - Error
 
 ```json
 {
   "errors": {
-    // For more details on error, look at ./lib/tic_tac_toe_quiqup/game/game_session_state.ex
+     // "For more details on error, look at ./lib/tic_tac_toe_quiqup/game/game_session_state.ex"
     "details": "{ERROR DESCRIPTION}" 
   }
 }
