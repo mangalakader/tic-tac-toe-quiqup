@@ -2,10 +2,14 @@
 
 ![Contributor][contributors-shield]
 
+<div align="center">
+<a href="https://www.flaticon.com/free-icons/tic-tac-toe" target="_blank">
 <figure>
-<img src="./docs/images/tic-tac-toe.png" alt="Tic Tac Toe Logo" width="100" height="100">
-<figcaption>Image Credits: [Vitaly Gorbachev][tic-tac-toe-logo-attr]</figcaption>
+<img src="./docs/images/tic-tac-toe.png" alt="Tic Tac Toe Logo" width="200" height="200">
+<figcaption>Image Credits: Vitaly Gorbachev</figcaption>
 </figure>
+</a>
+</div>
 
 Tic-tac-toe is played on a three-by-three grid by two players, who alternately place the marks X and O in one of the nine spaces in the grid.
 
@@ -17,4 +21,3 @@ To start your Phoenix server:
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
-[tic-tac-toe-logo-attr]: <https://www.flaticon.com/free-icons/tic-tac-toe> "Tic-tac-toe icons created by Vitaly Gorbachev"
