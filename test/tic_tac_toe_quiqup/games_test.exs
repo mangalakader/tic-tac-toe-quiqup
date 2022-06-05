@@ -5,6 +5,8 @@ defmodule TicTacToeQuiqup.GamesTest do
 
   use TicTacToeQuiqup.DataCase, async: true
 
+  doctest TicTacToeQuiqup.Utilities
+
   alias TicTacToeQuiqup.{GamePlayer, Games, GameSessionState}
 
   setup do
