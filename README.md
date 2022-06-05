@@ -100,6 +100,10 @@ Now open another window or a tab and visit the same url to join as another playe
 
 ### Architecture
 
+The important aspect that is with respect to the architecture is the `Phoenix.PubSub` for broadcasting
+events as they happen and because of that, the whole state is synced across the API as well as LiveView,
+thus providing single state across mediums.
+
 <img src="./docs/images/arch.png" alt="Tic-Tac-Toe Elixir Game High Level Architecture"></img>
 
 ### Conventions
@@ -108,7 +112,39 @@ Now open another window or a tab and visit the same url to join as another playe
 
 As the application is designed to reflect in real-time, it is best to keep the contexts organized in a modular way. The `games.ex` acts as a interface between both json api and liveview. That provides the necessary isolation from the `GameSessionServer` interface, it is sufficient to modify just the context and not having to modify the game_server.
 
-The key takeaway is to keep the contexts grouped into interface specific modules
+The key takeaway is to keep the contexts grouped into interface specific modules and consume them in the API as well as UI.
+
+#### Type Specifications
+
+Elixir provides excellent support for type specifications using dialyzer, which helps to validate contracts in various functions.
+
+For this project, the type specs are grouped under a folder called `./lib/tic_tac_toe_quiqup/types/*.ex` and it is mandatory to provide such type specs for user generated context, modules or any other functions and not necessary for library generated files, in-built functions and other in-built callbacks.
+
+To install dialyzer globally: `mix archive.install hex dialyzer`
+To run dialyzer: `mix dialyzer`
+
+#### Credo
+
+To install credo globally:
+* `mix archive.install hex credo`
+* `mix archive.install hex jason`
+* `mix archive.install hex bunt`
+
+To do a strict analysis `mix credo --strict`
+
+### Testing
+
+The project has both [DocTest](https://elixir-lang.org/getting-started/mix-otp/docs-tests-and-with.html#doctests), unit tests and integration tests under the `tests/` directory.
+
+To run all tests: `mix test`
+
+Also, to make it easier to test specific parts, tags have been used:
+* `mix test --only unit` for testing the unit test cases which comprises of contexts, utilities, etc.,
+* `mix test --only api` for testing the controller test cases
+* `mix test --only server` for testing the GameSessionServer alone
+* `mix test --only state` for testing the GameSessionServer and GameSessionState alone
+* `mix test --only live` for testing the liveview alone
+* `mix test --only context` for testing the contexts alone
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
