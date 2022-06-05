@@ -13,7 +13,8 @@ Vitaly Gorbachev
 </div>
 <br />
 Tic-tac-toe is played on a three-by-three grid by two players, who alternately place the marks X and O in one of the nine spaces in the grid.
-
+<br />
+<br />
 <details open>
   <summary>Table of Contents</summary>
   <ol>
@@ -39,5 +40,9 @@ Tic-tac-toe is played on a three-by-three grid by two players, who alternately p
   </ol>
 </details>
 
+## About The Project
+
+[Player 1 starts][p1-starts]
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
+[p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
