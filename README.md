@@ -82,6 +82,12 @@ Now open another window or a tab and visit the same url to join as another playe
 <img src="./docs/images/p1_move_wait_p2.png" alt="Player 1 moves and gets an error to wait for player 2" width="30%"></img>
 <img src="./docs/images/p2_joining.png" alt="Player 2 is joining the game" width="30%"></img>
 <img src="./docs/images/p2_joined.png" alt="Player 2 joined the game" width="30%"></img>
+<img src="./docs/images/p1_moves_12.png" alt="Player 1 captures square [1, 2]" width="30%"></img>
+<img src="./docs/images/p2_moves_12_error.png" alt="Player 2 tries to captures square [1, 2] error" width="30%"></img>
+<img src="./docs/images/console_log.png" alt="Console Logs during the game" width="30%"></img>
+<img src="./docs/images/p2_wins.png" alt="Player 2 wins the game" width="30%"></img>
+<img src="./docs/images/game_ends_inactivity.png" alt="Game ended due to inactivity" width="30%"></img>
+<img src="./docs/images/console_log_inactivity.png" alt="Console Logs after game ended" width="30%"></img>
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
