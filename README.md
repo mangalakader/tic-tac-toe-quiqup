@@ -62,5 +62,12 @@ Additionally, the following features need to be provided:
 * [Phoenix Framework](https://www.phoenixframework.org/)
 * [Phoenix LiveView](https://hexdocs.pm/phoenix_live_view/installation.html)
 
+## Getting Started
+
+### Prerequisites
+
+* Erlang - [Install Erlang](https://hexdocs.pm/phoenix_live_view/installation.html)
+* Elixir - [Install Elixir](https://elixir-lang.org/install.html)
+
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
