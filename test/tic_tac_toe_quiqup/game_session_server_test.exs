@@ -5,6 +5,8 @@ defmodule TicTacToeQuiqup.GameSessionServerTest do
 
   use TicTacToeQuiqup.DataCase, async: true
 
+  doctest TicTacToeQuiqup.GameSessionServer
+
   alias TicTacToeQuiqup.{GamePlayer, GameSessionServer, GameSessionState, Utilities}
 
   setup do

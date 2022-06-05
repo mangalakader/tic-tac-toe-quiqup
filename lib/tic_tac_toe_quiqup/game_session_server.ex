@@ -9,27 +9,38 @@ defmodule TicTacToeQuiqup.GameSessionServer do
 
   alias Phoenix.PubSub
   alias TicTacToeQuiqup.{GamePlayer, GameSessionState}
+  alias TicTacToeQuiqup.Types.Errors
+  alias TicTacToeQuiqup.Types.GamePlayer, as: GamePlayerSpec
+  alias TicTacToeQuiqup.Types.GameSessionState, as: GameSessionStateSpec
 
   use GenServer, restart: :transient
 
-  @doc false
-  def start_link([session_code: session_code, player: _player] = args) do
-    case GenServer.start_link(
-           __MODULE__,
-           args,
-           name: via_tuple(session_code)
-         ) do
-      {:ok, pid} -> {:ok, pid}
-      {:error, {:already_started, _pid}} -> :already_started
-    end
-  end
+  @doc """
+  The name function takes game session code as input and returns
+  a tuple which can be used for calling genserver callbacks
 
-  @impl true
-  def init(session_code: session_code, player: player),
-    do: GameSessionState.event({:start_game, session_code, player})
+    ```elixir
+    iex> {:via, Registry, {TicTacToeQuiqup.Registry, "HELLO"}} =
+    ...> TicTacToeQuiqup.GameSessionServer.name("HELLO")
 
+    ```
+  """
+  @spec name(binary()) :: {atom(), atom(), {atom(), binary()}}
   def name(session_code), do: via_tuple(session_code)
 
+  @doc """
+  The state function takes game session code as input and returns
+  the game state if a game session is found or returns a error
+
+    ```elixir
+    iex> {:ok, player} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM")
+    iex> {:ok, _pid} = TicTacToeQuiqup.GameSessionServer.start_link([session_code: "HELLO", player: player])
+    iex> {:ok, %TicTacToeQuiqup.GameSessionState{session_code: "HELLO"}} =
+    ...> TicTacToeQuiqup.GameSessionServer.state("HELLO")
+
+    ```
+  """
+  @spec state(binary) :: {:ok, GameSessionStateSpec.t()} | Errors.t()
   def state(session_code) do
     if check_game?(session_code) do
       GenServer.call(via_tuple(session_code), :current_state)
@@ -38,6 +49,23 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     end
   end
 
+  @doc """
+  The start_or_join function takes game session code and a player as input and returns
+  the a :ok tuple or error tuple
+
+    ```elixir
+    iex> {:ok, player} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM2")
+    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player)
+    iex> {:ok, :joined} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player)
+    iex> {:ok, :joined} = 
+    ...> TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", %{player | name: "RANDOM3", letter: :o})
+    iex> {:error, "Game can be played only by maximum of 2 players"} = 
+    ...> TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", %{player| letter: :a})
+
+    ```
+  """
+
+  @spec start_or_join(binary(), GamePlayerSpec.t()) :: {:ok, :started | :joined} | Errors.t()
   def start_or_join(session_code, %GamePlayer{} = player) do
     case DynamicSupervisor.start_child(
            TicTacToeQuiqup.GameSupervisor,
@@ -55,6 +83,21 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     end
   end
 
+  @doc """
+  The join function takes game session code and a player as input and returns
+  the a :ok tuple or error tuple
+
+    ```elixir
+    iex> {:ok, player} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM2")
+    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO3", player)
+    iex> {:ok, %TicTacToeQuiqup.GameSessionState{players: [_p1, _p2]}} = 
+    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO3", %{player | name: "RANDOM3", letter: :o})
+    iex> {:error, "Game can be played only by maximum of 2 players"} = 
+    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO3", %{player| letter: :a})
+
+    ```
+  """
+  @spec join(binary(), GamePlayerSpec.t()) :: {:ok, GameSessionStateSpec.t()} | Errors.t()
   def join(session_code, player) do
     if check_game?(session_code) do
       GenServer.call(via_tuple(session_code), {:join_game, player})
@@ -63,6 +106,26 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     end
   end
 
+  @doc """
+  The play function takes game session code, row, column and a player_id as input and returns
+  the a :ok tuple or error tuple
+
+    ```elixir
+    iex> {:ok, player1} = TicTacToeQuiqup.GamePlayer.new_x("RANDOMX")
+    iex> {:ok, player2} = TicTacToeQuiqup.GamePlayer.new_o("RANDOMO")
+    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO4", player1)
+    iex> {:error, "Waiting for player 2"} = 
+    ...> TicTacToeQuiqup.GameSessionServer.play("HELLO4", 2, 2, player1.id)
+    iex> {:ok, %TicTacToeQuiqup.GameSessionState{players: [_p1, _p2]}} = 
+    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO4", player2)
+    iex> {:ok, %TicTacToeQuiqup.GameSessionState{
+    ...>    board: %{
+    ...>       %TicTacToeQuiqup.GameSquare{col: 2, row: 2} => :x
+    ...>    }
+    ...> }} = TicTacToeQuiqup.GameSessionServer.play("HELLO4", 2, 2, player1.id)
+
+    ```
+  """
   def play(session_code, row, col, player_id) do
     if check_game?(session_code) do
       GenServer.call(via_tuple(session_code), {:place, row, col, player_id})
@@ -71,10 +134,27 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     end
   end
 
+  @doc false
+  def start_link([session_code: session_code, player: _player] = args) do
+    case GenServer.start_link(
+           __MODULE__,
+           args,
+           name: via_tuple(session_code)
+         ) do
+      {:ok, pid} -> {:ok, pid}
+      {:error, {:already_started, _pid}} -> :already_started
+    end
+  end
+
+  @impl true
+  def init(session_code: session_code, player: player),
+    do: GameSessionState.event({:start_game, session_code, player})
+
   @impl true
   def handle_call(:current_state, _from, %GameSessionState{} = state),
     do: {:reply, {:ok, state}, state}
 
+  @impl true
   def handle_call(
         {:join_game, player} = event,
         _from,
@@ -88,6 +168,7 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     end
   end
 
+  @impl true
   def handle_call({:place, row, col, player_id}, _from, %GameSessionState{} = state) do
     Logger.info("[Move] | #{state.session_code} | #{player_id} places in {#{row}, #{col}}")
 
@@ -108,6 +189,7 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     {:stop, :normal, state}
   end
 
+  @spec broadcast_state(GameSessionStateSpec.t()) :: :ok
   defp broadcast_state(game_session_state) do
     Logger.info(
       "[Broadcast] #{game_session_state.session_code} | #{game_session_state.status} | Next Turn: #{game_session_state.player_turn} | Winner: #{game_session_state.winner}"
@@ -120,8 +202,10 @@ defmodule TicTacToeQuiqup.GameSessionServer do
     )
   end
 
+  @spec via_tuple(binary()) :: {atom(), atom(), {atom(), binary()}}
   defp via_tuple(name), do: {:via, Registry, {@registry, name}}
 
+  @spec check_game?(binary()) :: boolean()
   defp check_game?(session_code) do
     case Registry.lookup(@registry, session_code) do
       [{_pid, _any}] -> true
