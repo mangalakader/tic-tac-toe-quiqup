@@ -16,6 +16,7 @@ defmodule TicTacToeQuiqup.Games do
 
     # if the game state is found (game is running), check if the player is already in the game,
     # allow the player to join the game
+
     with {:ok, %GameSessionState{} = game_state} <- GameSessionServer.state(new_session_code),
          {:ok, old_player} <- GameSessionState.find_player(:name, game_state, player_name),
          {:ok, _state} <-
@@ -25,9 +26,11 @@ defmodule TicTacToeQuiqup.Games do
     else
       # if the player is not found go to the player not found error clause, then creates the player
       # and join the game
+
       {:error, "Player not found!"} -> create_player_and_join_game(session_code, player_name)
       # if the game state is not found go to the game not found error clause, then creates a new game
       # and join the game using the player
+
       {:error, "Game not found!"} -> new_game(new_session_code, player_name)
       {:error, reason} -> {:error, reason}
     end
