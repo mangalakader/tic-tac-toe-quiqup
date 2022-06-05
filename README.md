@@ -1,6 +1,6 @@
 ![Contributor][contributors-shield]
 
-<h3 align="center"> Tic Tac Toe </h3>
+<h1 align="center"> Tic Tac Toe </h1>
 <br />
 <div align="center">
 <img src="./docs/images/tic-tac-toe.png" alt="Tic Tac Toe Logo" width="200" height="200">
