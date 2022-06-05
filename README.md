@@ -1,8 +1,11 @@
 # TicTacToe Game
 
-![Contributors][contributors-shield]
+![Contributor][contributors-shield]
 
-![Tic-Tac-Toe.png](./docs/images/tic-tac-toe.png)
+<figure>
+<img src="./docs/images/tic-tac-toe.png" alt="Tic Tac Toe Logo" width="100" height="100">
+<figcaption>Image Credits: [Vitaly Gorbachev][tic-tac-toe-logo-attr]</figcaption>
+</figure>
 
 Tic-tac-toe is played on a three-by-three grid by two players, who alternately place the marks X and O in one of the nine spaces in the grid.
 
