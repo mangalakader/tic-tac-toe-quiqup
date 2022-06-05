@@ -102,5 +102,13 @@ Now open another window or a tab and visit the same url to join as another playe
 
 <img src="./docs/images/arch.png" alt="Tic-Tac-Toe Elixir Game High Level Architecture"></img>
 
+### Conventions
+
+#### Context
+
+As the application is designed to reflect in real-time, it is best to keep the contexts organized in a modular way. The `games.ex` acts as a interface between both json api and liveview. That provides the necessary isolation from the `GameSessionServer` interface, it is sufficient to modify just the context and not having to modify the game_server.
+
+The key takeaway is to keep the contexts grouped into interface specific modules
+
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
