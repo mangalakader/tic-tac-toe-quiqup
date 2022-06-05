@@ -30,7 +30,14 @@ Vitaly Gorbachev
         <li><a href="#screenshots">Screenshots</a></li>
       </ul>
     </li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li>
+    <a href="#contributing">Contributing</a>
+      <ul>
+        <li><a href="#Architecture">Architecture</a></li>
+        <li><a href="#Conventions">Conventions</a></li>
+        <li><a href="#Testing">Testing</a></li>
+      </ul>
+    </li>
   </ol>
 </details>
 
@@ -88,6 +95,12 @@ Now open another window or a tab and visit the same url to join as another playe
 <img src="./docs/images/p2_wins.png" alt="Player 2 wins the game" width="30%"></img>
 <img src="./docs/images/game_ends_inactivity.png" alt="Game ended due to inactivity" width="30%"></img>
 <img src="./docs/images/console_log_inactivity.png" alt="Console Logs after game ended" width="30%"></img>
+
+## Contributing
+
+### Architecture
+
+<img src="./docs/images/arch.png" alt="Tic-Tac-Toe Elixir Game High Level Architecture"></img>
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
