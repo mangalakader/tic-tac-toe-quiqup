@@ -27,14 +27,10 @@ Vitaly Gorbachev
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#screenshots">Screenshots</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -68,6 +64,25 @@ Additionally, the following features need to be provided:
 
 * Erlang - [Install Erlang](https://github.com/erlang/otp#installation)
 * Elixir - [Install Elixir](https://elixir-lang.org/install.html)
+
+### Installation
+
+To get started locally:
+
+* Download the dependencies using `mix deps.get`
+* To start the interactive development server `iex -S mix phx.server`
+
+Now open your browser and visit `http://localhost:4000` and you should see a player information page, type out the form and click `Join Game`.
+
+Now open another window or a tab and visit the same url to join as another player.
+
+### Screenshots
+
+<div align="center>
+<img src="./docs/images/p1_starts.png" alt="Player 1 starts the game" width="100" height="50" />
+<img src="./docs/images/p1_starts.png" alt="Player 1 starts the game" width="100" height="50" />
+<img src="./docs/images/p1_starts.png" alt="Player 1 starts the game" width="100" height="50" />
+</div>
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
