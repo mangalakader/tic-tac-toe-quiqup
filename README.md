@@ -1,4 +1,10 @@
-# TicTacToeQuiqup
+# TicTacToe Game
+
+[![Contributors][contributors-shield]][contributors-url]
+
+![Tic-Tac-Toe.png](./docs/images/tic-tac-toe.png)
+
+Tic-tac-toe is played on a three-by-three grid by two players, who alternately place the marks X and O in one of the nine spaces in the grid.
 
 To start your Phoenix server:
 
@@ -16,3 +22,5 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+[contributors-shield]: https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge
