@@ -2,8 +2,9 @@ defmodule TicTacToeQuiqup.GameSquareTest do
   @moduledoc """
   Unit Tests for Game Square Module
   """
-
   use TicTacToeQuiqup.DataCase, async: true
+
+  doctest TicTacToeQuiqup.GameSquare
 
   alias TicTacToeQuiqup.GameSquare
 

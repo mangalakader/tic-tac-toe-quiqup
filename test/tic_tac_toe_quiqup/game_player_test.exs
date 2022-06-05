@@ -4,6 +4,8 @@ defmodule TicTacToeQuiqup.GamePlayerTest do
   """
   use TicTacToeQuiqup.DataCase, async: true
 
+  doctest TicTacToeQuiqup.GamePlayer
+
   alias TicTacToeQuiqup.GamePlayer
 
   describe "new/3" do
