@@ -32,6 +32,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Game is ended after 2 minutes of inactivity
+config :tic_tac_toe_quiqup, TicTacToeQuiqup.GameSessionState, inactivity_timeout: 1000 * 60 * 2
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

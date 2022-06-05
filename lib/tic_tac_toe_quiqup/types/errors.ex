@@ -3,5 +3,5 @@ defmodule TicTacToeQuiqup.Types.Errors do
   Type Specs for Generic Errors across application
   """
 
-  @type t() :: {:error, binary()}
+  @type t() :: {:error, binary() | Enumerable.t()}
 end
