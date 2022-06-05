@@ -12,8 +12,6 @@ Vitaly Gorbachev
 </a>
 </div>
 <br />
-Tic-tac-toe is played on a three-by-three grid by two players, who alternately place the marks X and O in one of the nine spaces in the grid.
-<br />
 <br />
 <details open>
   <summary>Table of Contents</summary>
@@ -43,6 +41,20 @@ Tic-tac-toe is played on a three-by-three grid by two players, who alternately p
 ## About The Project
 
 ![Player 1 starts][p1-starts]
+
+Tic-tac-toe is played on a three-by-three grid by two players, who alternately place the marks X and O in one of the nine spaces in the grid.
+
+The basic user stories for the minimal version of the project are:
+
+* As an API user I should be able to create a new tic tac toe game session
+* As an API user I should be able to complete a turn as the crosses (X) player
+* As an API user I should be able to complete a turn as the naughts (O) player
+* As an API user when I make a winning move, I should be informed and the game should be completed with a win status
+
+Additionally, the following features need to be provided:
+
+* Allow two players to have some kind of session such that they could both use the API as separate actors and compete with each other
+* Build a frontend for your game, anyway you like, and have the full stack operational
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
