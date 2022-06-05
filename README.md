@@ -56,5 +56,11 @@ Additionally, the following features need to be provided:
 * Allow two players to have some kind of session such that they could both use the API as separate actors and compete with each other
 * Build a frontend for your game, anyway you like, and have the full stack operational
 
+### Built With
+
+* [Elixir](https://elixir-lang.org/)
+* [Phoenix Framework](https://www.phoenixframework.org/)
+* [Phoenix LiveView](https://hexdocs.pm/phoenix_live_view/installation.html)
+
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
 [p1-starts]: <./docs/images/p1_starts.png> "Player 1 starts the game"
