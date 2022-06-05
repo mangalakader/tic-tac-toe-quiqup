@@ -79,9 +79,9 @@ Now open another window or a tab and visit the same url to join as another playe
 ### Screenshots
 
 <div align="center>
-<img src="./docs/images/p1_starts.png" alt="Player 1 starts the game" width="200" height="100">
 <img src="./docs/images/p1_move_wait_p2.png" alt="Player 1 moves and gets an error to wait for player 2" width="200" height="100">
-<img src="./docs/images/p2_joining.png" alt="Player 2 joins the game" width="200" height="100">
+<img src="./docs/images/p2_joining.png" alt="Player 2 is joining the game" width="200" height="100">
+<img src="./docs/images/p2_joined.png" alt="Player 2 joins the game" width="200" height="100">
 </div>
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
