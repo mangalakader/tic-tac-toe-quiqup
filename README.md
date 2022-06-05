@@ -66,7 +66,7 @@ Additionally, the following features need to be provided:
 
 ### Prerequisites
 
-* Erlang - [Install Erlang](https://hexdocs.pm/phoenix_live_view/installation.html)
+* Erlang - [Install Erlang](https://github.com/erlang/otp#installation)
 * Elixir - [Install Elixir](https://elixir-lang.org/install.html)
 
 [contributors-shield]: <https://img.shields.io/github/contributors/mangalakader/tic-tac-toe-quiqup?style=for-the-badge>
