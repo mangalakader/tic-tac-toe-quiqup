@@ -28,6 +28,7 @@ Vitaly Gorbachev
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#screenshots">Screenshots</a></li>
+        <li><a href="#api-usage">Api Usage</a></li>
       </ul>
     </li>
     <li>
@@ -96,6 +97,104 @@ Now open another window or a tab and visit the same url to join as another playe
 <img src="./docs/images/game_ends_inactivity.png" alt="Game ended due to inactivity" width="30%"></img>
 <img src="./docs/images/console_log_inactivity.png" alt="Console Logs after game ended" width="30%"></img>
 
+### Api Usage
+
+#### Create a New Game or Join a Game
+
+For either creating a new game or joining an existing game, the request is the same.
+* If you don't provide a session code, automatically a new game will be created with auto-generated session code
+* If you provide a session code
+     - if it exists, then you will be joining the game,
+     - if it doesn't exists, then a new game will be created with the provided session code
+
+##### Request
+
+```bash
+curl -X POST "http://localhost:4000/api/games" -H "Content-type: application/json" --data '{"player_name": "Test Player 1", "session_code": ""}'
+```
+##### Response Code
+
+```bash
+201
+```
+##### Response Body - Success
+
+```json
+{
+  "data": {
+    "board": [
+      {
+        "col": 1,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 1,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 1,
+        "row": 3,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 2,
+        "row": 3,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 1,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 2,
+        "value": null
+      },
+      {
+        "col": 3,
+        "row": 3,
+        "value": null
+      }
+    ],
+    "player_turn": "x",
+    "players": [
+      {
+        "id": "CTPEXO7ES4XQEWNPXF5Q",
+        "letter": "x",
+        "name": "2"
+      }
+    ],
+    "session_code": "AF33I",
+    "status": "playing",
+    "winner": null
+  }
+}
+```
+
+##### Response Body - Error
+
+```json
+{
+  "errors": {
+    // For more details on error, look at ./lib/tic_tac_toe_quiqup/game/game_session_state.ex
+    "details": "{ERROR DESCRIPTION}" 
+  }
+}
+```
+
 ## Contributing
 
 ### Architecture
@@ -121,6 +220,7 @@ Elixir provides excellent support for type specifications using dialyzer, which 
 For this project, the type specs are grouped under a folder called `./lib/tic_tac_toe_quiqup/types/*.ex` and it is mandatory to provide such type specs for user generated context, modules or any other functions and not necessary for library generated files, in-built functions and other in-built callbacks.
 
 To install dialyzer globally: `mix archive.install hex dialyzer`
+
 To run dialyzer: `mix dialyzer`
 
 #### Credo
