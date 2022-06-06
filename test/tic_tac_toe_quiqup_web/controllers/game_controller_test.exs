@@ -55,7 +55,7 @@ defmodule TicTacToeQuiqupWeb.GameControllerTest do
         post(
           conn,
           Routes.game_path(conn, :create),
-          %{"player_name" => "Test Player 2", "session_code" => session_code}
+          %{"player_name" => "Test Player 3", "session_code" => session_code}
         )
 
       assert %{"details" => "Game can be played only by maximum of 2 players"} =

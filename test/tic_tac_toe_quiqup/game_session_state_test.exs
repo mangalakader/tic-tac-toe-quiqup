@@ -72,7 +72,7 @@ defmodule TicTacToeQuiqup.GameSessionStateTest do
       assert {:error, "Game can be played only by maximum of 2 players"} =
                GameSessionState.event(
                  %{state | players: [player_one, player_two]},
-                 {:join_game, player_one}
+                 {:join_game, %{player_one | id: "RANDOM123"}}
                )
     end
 

@@ -99,8 +99,12 @@ defmodule TicTacToeQuiqup.GameSessionState do
   def event(%GameSessionState{status: :game_over, players: [_p1, _p2]}, {:join_game, _player}),
     do: {:error, "Game completed!"}
 
-  def event(%GameSessionState{players: [_p1, _p2]}, {:join_game, _player}),
-    do: {:error, "Game can be played only by maximum of 2 players"}
+  def event(%GameSessionState{players: [_p1, _p2]} = state, {:join_game, player}) do
+    case find_player(state, player.id) do
+      {:ok, _old_player} -> {:ok, state}
+      {:error, _reason} -> {:error, "Game can be played only by maximum of 2 players"}
+    end
+  end
 
   def event(%GameSessionState{players: [p1]} = state, {:join_game, p2}) when p1 != p2 do
     p2 = %{p2 | letter: toggle_letter(p1.letter)}

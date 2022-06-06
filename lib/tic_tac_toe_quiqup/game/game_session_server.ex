@@ -54,13 +54,15 @@ defmodule TicTacToeQuiqup.GameSessionServer do
   the a :ok tuple or error tuple
 
     ```elixir
-    iex> {:ok, player} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM2")
-    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player)
-    iex> {:ok, :joined} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player)
+    iex> {:ok, player1} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM133")
+    iex> {:ok, player2} = TicTacToeQuiqup.GamePlayer.new_o("RANDOM233")
+    iex> {:ok, player3} = TicTacToeQuiqup.GamePlayer.new_o("RANDOM333")
+    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player1)
+    iex> {:ok, :joined} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player1)
     iex> {:ok, :joined} = 
-    ...> TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", %{player | name: "RANDOM3", letter: :o})
+    ...> TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player2)
     iex> {:error, "Game can be played only by maximum of 2 players"} = 
-    ...> TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", %{player| letter: :a})
+    ...> TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO2", player3)
 
     ```
   """
@@ -88,12 +90,14 @@ defmodule TicTacToeQuiqup.GameSessionServer do
   the a :ok tuple or error tuple
 
     ```elixir
-    iex> {:ok, player} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM2")
-    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO3", player)
+    iex> {:ok, player1} = TicTacToeQuiqup.GamePlayer.new_x("RANDOM133")
+    iex> {:ok, player2} = TicTacToeQuiqup.GamePlayer.new_o("RANDOM233")
+    iex> {:ok, player3} = TicTacToeQuiqup.GamePlayer.new_o("RANDOM333")
+    iex> {:ok, :started} = TicTacToeQuiqup.GameSessionServer.start_or_join("HELLO3", player1)
     iex> {:ok, %TicTacToeQuiqup.GameSessionState{players: [_p1, _p2]}} = 
-    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO3", %{player | name: "RANDOM3", letter: :o})
+    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO3", player2)
     iex> {:error, "Game can be played only by maximum of 2 players"} = 
-    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO3", %{player| letter: :a})
+    ...> TicTacToeQuiqup.GameSessionServer.join("HELLO3", player3)
 
     ```
   """
